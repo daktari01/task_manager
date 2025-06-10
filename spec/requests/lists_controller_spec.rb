@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ListsController, type: :controller do
+RSpec.describe "lists", type: :requests do
   let(:valid_attributes) {
     { title: 'Test List', description: 'This is a test list' }
   }
