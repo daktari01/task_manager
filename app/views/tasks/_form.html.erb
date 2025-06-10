@@ -30,8 +30,10 @@
   <%# Hidden field for list_id since it's already in the URL %>
   <%= form.hidden_field :list_id, value: @list.id %>
 
-  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <%= link_to "Cancel", list_tasks_path(@list), class: "btn btn-outline-secondary me-md-2" %>
-    <%= form.submit class: "btn btn-primary" %>
+  <div class="d-flex justify-content-end">
+    <div class="btn-group" role="group">
+      <%= link_to "Cancel", list_tasks_path(@list), class: "btn btn-outline-secondary" %>
+      <%= form.submit class: "btn btn-outline-primary" %>
+    </div>
   </div>
 <% end %>

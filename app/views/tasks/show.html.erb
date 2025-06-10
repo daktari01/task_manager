@@ -21,8 +21,10 @@
 
 
   <div class="d-flex gap-2">
-    <%= link_to "Edit Task", edit_list_task_path(@task.list, @task), class: "btn btn-primary" %>
-    <%= link_to "Back to Tasks", list_tasks_path(@task.list), class: "btn btn-outline-secondary" %>
+    <div class="btn-group" role="group">
+      <%= link_to "Edit Task", edit_list_task_path(@task.list, @task), class: "btn btn-outline-primary" %>
+      <%= link_to "Back to Tasks", list_tasks_path(@task.list), class: "btn btn-outline-secondary" %>
+    </div>
     
     <div class="ms-auto">
       <%= button_to "Delete Task", [@task.list, @task], 
