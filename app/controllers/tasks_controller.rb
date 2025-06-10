@@ -4,6 +4,16 @@ class TasksController < ApplicationController
 
   def index
     @tasks = @list.tasks
+    @filter = params[:filter] || 'all'
+    
+    @tasks = case @filter
+             when 'completed'
+               @tasks.completed
+             when 'pending'
+               @tasks.pending
+             else
+               @tasks
+             end
   end
 
   def show
