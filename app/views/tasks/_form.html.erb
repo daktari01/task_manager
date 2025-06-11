@@ -24,12 +24,6 @@
 
   <div class="row mb-3">
     <div class="col-md-6">
-      <div class="form-check">
-        <%= form.check_box :completed, class: "form-check-input" %>
-        <%= form.label :completed, class: "form-check-label" %>
-      </div>
-    </div>
-    <div class="col-md-6">
       <%= form.label :priority, class: "form-label fw-bold" %>
       <%= form.select :priority, 
                      options_for_select(
@@ -38,6 +32,12 @@
                      ),
                      {},
                      { class: 'form-select' } %>
+    </div>
+    <div class="col-md-6 d-flex align-items-end">
+      <div class="form-check">
+        <%= form.check_box :completed, class: "form-check-input" %>
+        <%= form.label :completed, class: "form-check-label" %>
+      </div>
     </div>
   </div>
 

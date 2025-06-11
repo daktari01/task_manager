@@ -96,11 +96,11 @@
                                     'aria-label': 'Change priority'
                                   } %>
                     <% end %>
-                    <%= link_to [@list, task], class: "btn btn-sm btn-outline-primary" do %>
-                      <i class="bi bi-eye"></i>
+                    <%= link_to [@list, task], class: "btn btn-sm btn-outline-primary", title: "View details" do %>
+                      <i class="bi bi-eye"></i> <span class="d-none d-md-inline">View</span>
                     <% end %>
-                    <%= link_to edit_list_task_path(@list, task), class: "btn btn-sm btn-outline-secondary" do %>
-                      <i class="bi bi-pencil"></i>
+                    <%= link_to edit_list_task_path(@list, task), class: "btn btn-sm btn-outline-secondary", title: "Edit task" do %>
+                      <i class="bi bi-pencil"></i> <span class="d-none d-md-inline">Edit</span>
                     <% end %>
                   </div>
                 </div>
