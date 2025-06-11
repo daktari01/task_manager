@@ -1,6 +1,7 @@
 class Task < ApplicationRecord
   belongs_to :list
   validates :title, presence: true, length: { maximum: 255 }
+  enum priority: { low: 0, medium: 1, high: 2 }, _default: :low
 
   before_validation :set_default_position, on: :create
   before_save :normalize_title
@@ -8,6 +9,7 @@ class Task < ApplicationRecord
   scope :completed, -> { where(completed: true) }
   scope :pending, -> { where(completed: false) }
   scope :ordered, -> { order(position: :asc, created_at: :asc) }
+  scope :by_priority, ->(priority) { where(priority: priority) if priority.present? }
 
   private
 

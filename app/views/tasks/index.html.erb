@@ -15,17 +15,35 @@
   </div>
 
   <div class="card mb-4">
-    <div class="card-header bg-transparent">
+    <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
       <div class="btn-group" role="group">
         <%= link_to "All", 
-            list_tasks_path(@list), 
+            list_tasks_path(@list, priority: @priority_filter), 
             class: "btn btn-sm #{'btn-primary' unless %w[completed pending].include?(@filter)} #{'btn-outline-primary' if %w[completed pending].include?(@filter)}" %>
         <%= link_to "Completed", 
-            list_tasks_path(@list, filter: 'completed'), 
+            list_tasks_path(@list, filter: 'completed', priority: @priority_filter), 
             class: "btn btn-sm #{'btn-success' if @filter == 'completed'} #{'btn-outline-success' if @filter != 'completed'}" %>
         <%= link_to "Incomplete", 
-            list_tasks_path(@list, filter: 'pending'), 
+            list_tasks_path(@list, filter: 'pending', priority: @priority_filter), 
             class: "btn btn-sm #{'btn-secondary' if @filter == 'pending'} #{'btn-outline-secondary' if @filter != 'pending'}" %>
+      </div>
+      
+      <div class="btn-group" role="group">
+        <%= link_to "All Priorities", 
+            list_tasks_path(@list, filter: @filter), 
+            class: "btn btn-sm #{'btn-primary' if @priority_filter.blank?} #{'btn-outline-primary' if @priority_filter.present?}" %>
+        <%= link_to list_tasks_path(@list, filter: @filter, priority: 'high'), 
+            class: "btn btn-sm #{'btn-danger' if @priority_filter == 'high'} #{'btn-outline-danger' if @priority_filter != 'high'}" do %>
+          <i class="bi bi-chevron-double-up"></i> High
+        <% end %>
+        <%= link_to list_tasks_path(@list, filter: @filter, priority: 'medium'), 
+            class: "btn btn-sm #{'btn-warning' if @priority_filter == 'medium'} #{'btn-outline-warning' if @priority_filter != 'medium'}" do %>
+          <i class="bi bi-chevron-up"></i> Medium
+        <% end %>
+        <%= link_to list_tasks_path(@list, filter: @filter, priority: 'low'), 
+            class: "btn btn-sm #{'btn-info' if @priority_filter == 'low'} #{'btn-outline-info' if @priority_filter != 'low'}" do %>
+          <i class="bi bi-chevron-down"></i> Low
+        <% end %>
       </div>
     </div>
     
@@ -47,16 +65,43 @@
                 </div>
 
                 <div class="d-flex align-items-center gap-3">
-                  <div class="d-flex align-items-center" style="min-width: 100px">
+                  <div class="d-flex align-items-center gap-2" style="min-width: 160px">
+                    <% priority_class = case task.priority
+                                      when 'high' then 'bg-danger'
+                                      when 'medium' then 'bg-warning text-dark'
+                                      else 'bg-info text-dark'
+                                      end %>
+                    <span class="badge <%= priority_class %>">
+                      <i class="bi #{task.priority == 'high' ? 'bi-chevron-double-up' : task.priority == 'medium' ? 'bi-chevron-up' : 'bi-chevron-down'}"></i>
+                      <%= task.priority.capitalize %>
+                    </span>
+                    
                     <% if task.completed? %>
                       <span class="badge bg-success">Completed</span>
                     <% else %>
-                      <span class="badge bg-secondary text-white">Pending</span>
+                      <span class="badge bg-secondary">Pending</span>
                     <% end %>
                   </div>
                   <div class="btn-group" role="group">
-                    <%= link_to "View", [@list, task], class: "btn btn-sm btn-outline-primary" %>
-                    <%= link_to "Edit", edit_list_task_path(@list, task), class: "btn btn-sm btn-outline-secondary" %>
+                    <%= form_with model: [@list, task], method: :patch, class: 'd-flex align-items-center gap-2' do |f| %>
+                      <%= f.select :priority, 
+                                  options_for_select(
+                                    Task.priorities.keys.map { |p| [p.capitalize, p] },
+                                    task.priority
+                                  ),
+                                  {},
+                                  { 
+                                    class: 'form-select form-select-sm',
+                                    onchange: 'this.form.requestSubmit()',
+                                    'aria-label': 'Change priority'
+                                  } %>
+                    <% end %>
+                    <%= link_to [@list, task], class: "btn btn-sm btn-outline-primary" do %>
+                      <i class="bi bi-eye"></i>
+                    <% end %>
+                    <%= link_to edit_list_task_path(@list, task), class: "btn btn-sm btn-outline-secondary" do %>
+                      <i class="bi bi-pencil"></i>
+                    <% end %>
                   </div>
                 </div>
               </div>

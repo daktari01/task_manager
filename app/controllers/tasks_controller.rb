@@ -4,8 +4,11 @@ class TasksController < ApplicationController
 
   def index
     @filter = params[:filter] || 'all'
+    @priority_filter = params[:priority]
 
     @tasks = @list.tasks.includes(:list).ordered
+    @tasks = @tasks.send(@filter) if @filter != 'all'
+    @tasks = @tasks.by_priority(@priority_filter) if @priority_filter.present?
 
     @tasks = case @filter
              when 'completed' then @tasks.completed
@@ -75,6 +78,6 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :description, :completed, :list_id)
+    params.require(:task).permit(:title, :description, :completed, :list_id, :priority)
   end
 end
