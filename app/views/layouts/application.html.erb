@@ -31,6 +31,22 @@
       </div>
     </nav>
     <div class="container mt-5">
+      <% flash.each do |type, message| %>
+        <% next if type == 'type' # Skip the type key if it exists as a separate flash %>
+        <% 
+          alert_class = case type.to_sym
+                       when :notice then 'alert-info'
+                       when :alert, :error then 'alert-danger'
+                       when :success then 'alert-success'
+                       else 'alert-secondary'
+                       end 
+        %>
+        <div class="alert <%= alert_class %> alert-dismissible fade show mb-4" role="alert">
+          <%= message %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
+      
       <%= yield %>
     </div>
 

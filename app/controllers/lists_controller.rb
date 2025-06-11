@@ -20,10 +20,13 @@ class ListsController < ApplicationController
 
     respond_to do |format|
       if @list.save
-        format.html { redirect_to @list, notice: "List was successfully created." }
+        format.html { redirect_to @list, flash: { success: 'List was created successfully' } }
         format.json { render :show, status: :created, location: @list }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html do 
+          flash.now[:alert] = "Could not create list: #{@list.errors.full_messages.join(', ')}"
+          render :new, status: :unprocessable_entity 
+        end
         format.json { render json: @list.errors, status: :unprocessable_entity }
       end
     end
@@ -32,10 +35,13 @@ class ListsController < ApplicationController
   def update
     respond_to do |format|
       if @list.update(list_params)
-        format.html { redirect_to @list, notice: "List was successfully updated." }
+        format.html { redirect_to @list, flash: { success: 'List was updated successfully' } }
         format.json { render :show, status: :ok, location: @list }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html do
+          flash.now[:alert] = "Could not update list: #{@list.errors.full_messages.join(', ')}"
+          render :edit, status: :unprocessable_entity 
+        end
         format.json { render json: @list.errors, status: :unprocessable_entity }
       end
     end
@@ -44,7 +50,7 @@ class ListsController < ApplicationController
     @list.destroy!
 
     respond_to do |format|
-      format.html { redirect_to lists_path, status: :see_other, notice: "List was successfully deleted." }
+      format.html { redirect_to lists_path, status: :see_other, flash: { success: 'List was deleted successfully' } }
       format.json { head :no_content }
     end
   end

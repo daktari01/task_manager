@@ -31,10 +31,13 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
-        format.html { redirect_to [@list, @task], notice: "Task was successfully created." }
+        format.html { redirect_to [@list, @task], flash: { success: 'Task was created successfully' } }
         format.json { render :show, status: :created, location: @task }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html do
+          flash.now[:alert] = "Could not create task: #{@task.errors.full_messages.join(', ')}"
+          render :new, status: :unprocessable_entity 
+        end
         format.json { render json: @task.errors, status: :unprocessable_entity }
       end
     end
@@ -43,10 +46,13 @@ class TasksController < ApplicationController
   def update
     respond_to do |format|
       if @task.update(task_params)
-        format.html { redirect_to [@list, @task], notice: "Task was successfully updated." }
+        format.html { redirect_to [@list, @task], flash: { success: 'Task was updated successfully' } }
         format.json { render :show, status: :ok, location: @task }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html do
+          flash.now[:alert] = "Could not update task: #{@task.errors.full_messages.join(', ')}"
+          render :edit, status: :unprocessable_entity 
+        end
         format.json { render json: @task.errors, status: :unprocessable_entity }
       end
     end
@@ -55,7 +61,7 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy!
     respond_to do |format|
-      format.html { redirect_to list_tasks_path(@list), notice: "Task was successfully deleted." }
+      format.html { redirect_to list_tasks_path(@list), flash: { success: 'Task was deleted successfully' } }
       format.json { head :no_content }
     end
   end
