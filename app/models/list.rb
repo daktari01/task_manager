@@ -9,20 +9,32 @@ class List < ApplicationRecord
 
   has_many :tasks, -> { order(position: :asc) }, dependent: :destroy
 
+
+
   def completion_summary
-    total = tasks.count
+    total = tasks.loaded? ? tasks.size : tasks.count
     return 'No tasks yet' if total.zero?
     
-    completed = tasks.completed.count
+    completed = if tasks.loaded?
+                  tasks.count(&:completed?)
+                else
+                  tasks.completed.count
+                end
+    
     "#{completed}/#{total} tasks completed"
   end
 
   def percent_complete
-    total = tasks.count.to_f
+    total = tasks.loaded? ? tasks.size : tasks.count
     return 0 if total.zero?
     
-    completed = tasks.completed.count
-    ((completed / total) * 100).round
+    completed = if tasks.loaded?
+                  tasks.count(&:completed?)
+                else
+                  tasks.completed.count
+                end
+    
+    ((completed.to_f / total) * 100).round
   end
   
   private

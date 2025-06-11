@@ -12,7 +12,14 @@ class Task < ApplicationRecord
   private
 
   def set_default_position
-    self.position ||= (list.tasks.maximum(:position) || -1) + 1
+    return if position.present?
+    
+    if list.tasks.loaded?
+      max_position = list.tasks.reject { |t| t == self }.map(&:position).max || -1
+      self.position = max_position + 1
+    else
+      self.position = (list.tasks.maximum(:position) || -1) + 1
+    end
   end
 
   def normalize_title

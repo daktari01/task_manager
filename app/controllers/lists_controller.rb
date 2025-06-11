@@ -2,7 +2,7 @@ class ListsController < ApplicationController
   before_action :set_list, only: %i[ show edit update destroy ]
 
   def index
-    @lists = List.all
+    @lists = List.includes(tasks: :list).references(:tasks)
   end
 
   def show

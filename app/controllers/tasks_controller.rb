@@ -3,16 +3,14 @@ class TasksController < ApplicationController
   before_action :set_task, only: %i[show edit update destroy]
 
   def index
-    @tasks = @list.tasks.ordered
     @filter = params[:filter] || 'all'
-    
+
+    @tasks = @list.tasks.includes(:list).ordered
+
     @tasks = case @filter
-             when 'completed'
-               @tasks.completed
-             when 'pending'
-               @tasks.pending
-             else
-               @tasks
+             when 'completed' then @tasks.completed
+             when 'pending'   then @tasks.pending
+             else                  @tasks
              end
   end
 
