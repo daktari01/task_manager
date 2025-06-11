@@ -47,11 +47,14 @@ class ListsController < ApplicationController
     end
   end
   def destroy
-    @list.destroy!
-
     respond_to do |format|
-      format.html { redirect_to lists_path, status: :see_other, flash: { success: 'List was deleted successfully' } }
-      format.json { head :no_content }
+      if @list.destroy
+        format.html { redirect_to lists_path, status: :see_other, flash: { success: 'List was deleted successfully' } }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to lists_path, alert: @list.errors.full_messages.join(', ') }
+        format.json { render json: @list.errors, status: :unprocessable_entity }
+      end
     end
   end
 

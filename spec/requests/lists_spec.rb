@@ -123,20 +123,40 @@ RSpec.describe "Lists", type: :request do
   end
 
   describe 'DELETE /lists/:id' do
-    it 'destroys the requested list' do
-      expect {
+    context 'when list has no incomplete tasks' do
+      it 'destroys the requested list' do
+        expect {
+          delete list_path(list)
+        }.to change(List, :count).by(-1)
+      end
+
+      it 'redirects to the lists index' do
         delete list_path(list)
-      }.to change(List, :count).by(-1)
+        expect(response).to redirect_to(lists_path)
+      end
+
+      it 'sets a success flash message' do
+        delete list_path(list)
+        expect(flash[:success]).to be_present
+      end
     end
 
-    it 'redirects to the lists index' do
-      delete list_path(list)
-      expect(response).to redirect_to(lists_path)
-    end
+    context 'when list has incomplete tasks' do
+      before do
+        list.tasks.create!(title: 'Incomplete Task', completed: false)
+      end
 
-    it 'sets a success flash message' do
-      delete list_path(list)
-      expect(flash[:success]).to be_present
+      it 'does not destroy the list' do
+        expect {
+          delete list_path(list)
+        }.not_to change(List, :count)
+      end
+
+      it 'redirects to the lists index with an error message' do
+        delete list_path(list)
+        expect(response).to redirect_to(lists_path)
+        expect(flash[:alert]).to include('Cannot delete list with incomplete tasks')
+      end
     end
   end
 end
