@@ -43,4 +43,45 @@ RSpec.describe List, type: :model do
       expect(List.ordered).to eq([list2, list1])
     end
   end
+
+  describe '#percent_complete' do
+    let(:list) { List.create!(title: 'Tasks List') }
+
+    context 'when there are no tasks' do
+      it 'returns 0' do
+        expect(list.percent_complete).to eq(0)
+      end
+    end
+
+    context 'when all tasks are completed' do
+      before do
+        3.times { list.tasks.create!(title: 'Task', completed: true) }
+      end
+
+      it 'returns 100' do
+        expect(list.percent_complete).to eq(100)
+      end
+    end
+
+    context 'when some tasks are completed' do
+      before do
+        2.times { list.tasks.create!(title: 'Completed Task', completed: true) }
+        list.tasks.create!(title: 'Incomplete Task', completed: false)
+      end
+
+      it 'returns the correct percentage' do
+        expect(list.percent_complete).to eq(67)
+      end
+    end
+
+    context 'when no tasks are completed' do
+      before do
+        3.times { list.tasks.create!(title: 'Incomplete Task', completed: false) }
+      end
+
+      it 'returns 0' do
+        expect(list.percent_complete).to eq(0)
+      end
+    end
+  end
 end

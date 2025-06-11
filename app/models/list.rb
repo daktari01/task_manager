@@ -16,6 +16,14 @@ class List < ApplicationRecord
     completed = tasks.completed.count
     "#{completed}/#{total} tasks completed"
   end
+
+  def percent_complete
+    total = tasks.count.to_f
+    return 0 if total.zero?
+    
+    completed = tasks.completed.count
+    ((completed / total) * 100).round
+  end
   
   private
   
