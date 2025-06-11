@@ -1,0 +1,79 @@
+<div class="container mt-4">
+  <% if notice.present? %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Tasks in <span class="text-primary"><%= @list.title %></span></h1>
+    <div class="btn-group" role="group">
+      <%= link_to "New Task", new_list_task_path(@list), class: "btn btn-outline-success" %>
+      <%= link_to "Back to Lists", lists_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header bg-transparent">
+      <div class="btn-group" role="group">
+        <%= link_to "All", 
+            list_tasks_path(@list), 
+            class: "btn btn-sm #{'btn-primary' unless %w[completed pending].include?(@filter)} #{'btn-outline-primary' if %w[completed pending].include?(@filter)}" %>
+        <%= link_to "Completed", 
+            list_tasks_path(@list, filter: 'completed'), 
+            class: "btn btn-sm #{'btn-success' if @filter == 'completed'} #{'btn-outline-success' if @filter != 'completed'}" %>
+        <%= link_to "Incomplete", 
+            list_tasks_path(@list, filter: 'pending'), 
+            class: "btn btn-sm #{'btn-secondary' if @filter == 'pending'} #{'btn-outline-secondary' if @filter != 'pending'}" %>
+      </div>
+    </div>
+    
+    <div class="card-body p-0">
+      <% if @tasks.any? %>
+        <div class="list-group list-group-flush">
+          <% @tasks.each do |task| %>
+            <div class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between align-items-start">
+                <div class="me-3">
+                  <div class="d-flex justify-content-between w-100">
+                    <h5 class="mb-1">
+                      <%= task.title %>
+                    </h5>
+                  </div>
+                  <% if task.description.present? %>
+                    <p class="mb-1 text-muted"><%= truncate(task.description, length: 150) %></p>
+                  <% end %>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                  <div class="d-flex align-items-center" style="min-width: 100px">
+                    <% if task.completed? %>
+                      <span class="badge bg-success">Completed</span>
+                    <% else %>
+                      <span class="badge bg-secondary text-white">Pending</span>
+                    <% end %>
+                  </div>
+                  <div class="btn-group" role="group">
+                    <%= link_to "View", [@list, task], class: "btn btn-sm btn-outline-primary" %>
+                    <%= link_to "Edit", edit_list_task_path(@list, task), class: "btn btn-sm btn-outline-secondary" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center p-4 text-muted">
+          <% if @filter == 'completed' %>
+            No completed tasks found.
+          <% elsif @filter == 'pending' %>
+            No incomplete tasks found.
+          <% else %>
+            No tasks found. Create your first task to get started!
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

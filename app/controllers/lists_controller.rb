@@ -44,7 +44,7 @@ class ListsController < ApplicationController
     @list.destroy!
 
     respond_to do |format|
-      format.html { redirect_to lists_path, status: :see_other, notice: "List was successfully destroyed." }
+      format.html { redirect_to lists_path, status: :see_other, notice: "List was successfully deleted." }
       format.json { head :no_content }
     end
   end

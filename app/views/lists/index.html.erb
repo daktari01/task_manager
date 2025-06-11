@@ -1,14 +1,47 @@
-<p style="color: green"><%= notice %></p>
+<div class="container mt-4">
+  <% if notice.present? %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
 
-<h1>Lists</h1>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>My Lists</h1>
+    <div class="btn-group" role="group">
+      <%= link_to "New List", new_list_path, class: "btn btn-outline-success" %>
+    </div>
+  </div>
 
-<div id="lists">
-  <% @lists.each do |list| %>
-    <%= render list %>
-    <p>
-      <%= link_to "Show this list", list, class: "btn btn-primary" %>
-    </p>
+  <% if @lists.any? %>
+    <div class="list-group mb-4">
+      <% @lists.each do |list| %>
+        <div class="list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-between align-items-start">
+            <div class="me-3">
+              <h5 class="mb-1">
+                <%= list.title %>
+              </h5>
+              <% if list.description.present? %>
+                <p class="mb-1 text-muted"><%= truncate(list.description, length: 150) %></p>
+              <% end %>
+              <% if (summary = list.completion_summary).present? %>
+                <p class="mb-0"><small class="text-muted fst-italic"><%= summary %></small></p>
+              <% end %>
+            </div>
+
+            <div class="btn-group" role="group">
+              <%= link_to "View List", list_path(list), class: "btn btn-sm btn-outline-success" %>
+              <%= link_to "View Tasks", list_tasks_path(list), class: "btn btn-sm btn-outline-primary" %>
+              <%= link_to "Edit", edit_list_path(list), class: "btn btn-sm btn-outline-secondary" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="alert alert-info">
+      No lists found. Create your first list to get started!
+    </div>
   <% end %>
 </div>
-
-<%= link_to "New list", new_list_path, class: "btn btn-primary" %>
