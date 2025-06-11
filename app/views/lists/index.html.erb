@@ -31,6 +31,7 @@
             </div>
 
             <div class="btn-group" role="group">
+              <%= link_to "View List", list_path(list), class: "btn btn-sm btn-outline-success" %>
               <%= link_to "View Tasks", list_tasks_path(list), class: "btn btn-sm btn-outline-primary" %>
               <%= link_to "Edit", edit_list_path(list), class: "btn btn-sm btn-outline-secondary" %>
             </div>
