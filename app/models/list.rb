@@ -7,7 +7,7 @@ class List < ApplicationRecord
 
   def completion_summary
     total = tasks.count
-    return if total.zero?
+    return 'No tasks yet' if total.zero?
     
     completed = tasks.completed.count
     "#{completed}/#{total} tasks completed"
