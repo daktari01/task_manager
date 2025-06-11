@@ -25,8 +25,13 @@
               <% if list.description.present? %>
                 <p class="mb-1 text-muted"><%= truncate(list.description, length: 150) %></p>
               <% end %>
-              <% if (summary = list.completion_summary).present? %>
-                <p class="mb-0"><small class="text-muted fst-italic"><%= summary %></small></p>
+              <% if list.tasks.any? %>
+                <p class="mb-0">
+                  <small class="text-muted fst-italic">
+                    <%= list.completion_summary %> 
+                    <span class="ms-1">(<%= list.percent_complete %>% complete)</span>
+                  </small>
+                </p>
               <% end %>
             </div>
 

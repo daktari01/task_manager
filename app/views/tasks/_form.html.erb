@@ -22,9 +22,23 @@
     <%= form.text_area :description, class: "form-control", rows: 4 %>
   </div>
 
-  <div class="mb-3 form-check">
-    <%= form.check_box :completed, class: "form-check-input" %>
-    <%= form.label :completed, class: "form-check-label" %>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <%= form.label :priority, class: "form-label fw-bold" %>
+      <%= form.select :priority, 
+                     options_for_select(
+                       Task.priorities.keys.map { |p| [p.capitalize, p] },
+                       @task.priority || 'low'
+                     ),
+                     {},
+                     { class: 'form-select' } %>
+    </div>
+    <div class="col-md-6 d-flex align-items-end">
+      <div class="form-check">
+        <%= form.check_box :completed, class: "form-check-input" %>
+        <%= form.label :completed, class: "form-check-label" %>
+      </div>
+    </div>
   </div>
 
   <%# Hidden field for list_id since it's already in the URL %>
