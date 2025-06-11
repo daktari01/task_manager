@@ -3,7 +3,7 @@ class TasksController < ApplicationController
   before_action :set_task, only: %i[show edit update destroy]
 
   def index
-    @tasks = @list.tasks
+    @tasks = @list.tasks.ordered
     @filter = params[:filter] || 'all'
     
     @tasks = case @filter

@@ -65,7 +65,7 @@ RSpec.describe "Lists", type: :request do
 
       it 'sets a success flash message' do
         post lists_path, params: { list: valid_attributes }
-        expect(flash[:notice]).to be_present
+        expect(flash[:success]).to be_present
       end
     end
 
@@ -103,7 +103,7 @@ RSpec.describe "Lists", type: :request do
 
       it 'sets a success flash message' do
         patch list_path(list), params: { list: new_attributes }
-        expect(flash[:notice]).to be_present
+        expect(flash[:success]).to be_present
       end
     end
 
@@ -136,7 +136,7 @@ RSpec.describe "Lists", type: :request do
 
     it 'sets a success flash message' do
       delete list_path(list)
-      expect(flash[:notice]).to be_present
+      expect(flash[:success]).to be_present
     end
   end
 end
